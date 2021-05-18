@@ -1,0 +1,24 @@
+Package: hdma2
+Type: Package
+Title: High Dimensionnal Mediation Analysis
+Version: 1.0
+Date: 2021-05-18
+Author: Basile Jumentier <basile.jumentier@gmail.com>
+Maintainer: Basile Jumentier <basile.jumentier@gmail.com>
+Description: The package contains a set of functions allowing to perform mediation analyzes in very high dimension. It was developed for DNA methylation data.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+Imports: 
+    ggplot2,
+    mediation,
+    lfmm,
+    dplyr,
+    fdrtool,
+    IRanges,
+    utils,
+    parallel,
+    Biostrings,
+    stats
+Depends: R (>= 2.10)
