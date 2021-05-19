@@ -31,9 +31,9 @@ differentially methylated regions (DMRs).
 }
 \examples{
 
-library(Highmed2)
+library(hdma2)
 
-# Run multivariate EWAS
+# Run mEWAS
 
 res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 

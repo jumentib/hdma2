@@ -45,7 +45,7 @@ which allows us to control the FDR.
 }
 \examples{
 
-library(Highmed2)
+library(hdma2)
 
 # Run mEWAS
 

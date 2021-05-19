@@ -43,9 +43,9 @@
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' library(Highmed2)
+##' library(hdma2)
 ##'
-##' # Run multivariate_EWAS
+##' # Run mEWAS
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
@@ -131,7 +131,7 @@ mEWAS <- function(X, Y, M, k, conf = NULL) {
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' library(Highmed2)
+##' library(hdma2)
 ##'
 ##' # Run mEWAS
 ##'
@@ -201,11 +201,11 @@ max2 <- function(pval1, pval2, diagnostic.plot = F, ...) {
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' library(Highmed2)
+##' library(hdma2)
 ##'
 ##' data(example)
 ##'
-##' # Run multivariate EWAS
+##' # Run mEWAS
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
@@ -542,9 +542,9 @@ combp2 <- function (data, dist.cutoff = 1000, bin.size = 310, seed = 0.01, nCore
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' library(Highmed2)
+##' library(hdma2)
 ##'
-##' # Run multivariate EWAS
+##' # Run mEWAS
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
@@ -593,7 +593,7 @@ DMR_search <- function(chr, start, end, pval, cpg, ...) {
 ##'
 ##' @details
 ##'
-##' We use the series of pValues (one pValue per CpGs) obtained with the EWASmultivariate
+##' We use the series of pValues (one pValue per CpGs) obtained with the mEWAS
 ##' regression method and the combination of pValue max2.
 ##' To determine the potential DMRs used the combp method present in the ENmix package (Xu et al. 2016).
 ##' This method uses the Fisher method to combine the pValues and also the base pair distance (bP)
@@ -606,9 +606,9 @@ DMR_search <- function(chr, start, end, pval, cpg, ...) {
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' library(Highmed2)
+##' library(hdma2)
 ##'
-##' # Run multivariate EWAS
+##' # Run mEWAS
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
@@ -711,7 +711,7 @@ DMR_built <- function(res, methylation, nb_cpg = 2) {
 ##' Each column corresponds to a distinct explanatory variable (Outcome).
 ##' Explanatory variables must be encoded as numeric variables.
 ##' @param covar set of covariable, must be numeric.
-##' @param U set of latent factors from multivariate_EWAS() function
+##' @param U set of latent factors from mEWAS() function
 ##' @param sims number of Monte Carlo draws for nonparametric bootstrap or quasi-Bayesian approximation.
 ##' 10000 is recommended.
 ##' @param ... argument of the mediate function from the mediation package
@@ -732,9 +732,9 @@ DMR_built <- function(res, methylation, nb_cpg = 2) {
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' library(Highmed2)
+##' library(hdma2)
 ##'
-##' # Run multivariate EWAS
+##' # Run mEWAS
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'

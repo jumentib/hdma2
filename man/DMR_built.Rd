@@ -23,7 +23,7 @@ CpG_for_each_DMR contains the list of markers (CpGs) present on each DMR.
 To build a vector for each DMR find with DMR_search
 }
 \details{
-We use the series of pValues (one pValue per CpGs) obtained with the EWASmultivariate
+We use the series of pValues (one pValue per CpGs) obtained with the mEWAS
 regression method and the combination of pValue max2.
 To determine the potential DMRs used the combp method present in the ENmix package (Xu et al. 2016).
 This method uses the Fisher method to combine the pValues and also the base pair distance (bP)
@@ -34,9 +34,9 @@ we therefore have a vector corresponding to the first principal component of a P
 }
 \examples{
 
-library(Highmed2)
+library(hdma2)
 
-# Run multivariate EWAS
+# Run mEWAS
 
 res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 

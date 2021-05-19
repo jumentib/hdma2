@@ -19,7 +19,7 @@ Explanatory variables must be encoded as numeric variables.}
 
 \item{covar}{set of covariable, must be numeric.}
 
-\item{U}{set of latent factors from multivariate_EWAS() function}
+\item{U}{set of latent factors from mEWAS() function}
 
 \item{sims}{number of Monte Carlo draws for nonparametric bootstrap or quasi-Bayesian approximation.
 10000 is recommended.}
@@ -45,9 +45,9 @@ test their significance.
 }
 \examples{
 
-library(Highmed2)
+library(hdma2)
 
-# Run multivariate EWAS
+# Run mEWAS
 
 res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 

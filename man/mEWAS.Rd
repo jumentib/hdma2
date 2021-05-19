@@ -55,9 +55,9 @@ See lfmm package for more information.
 }
 \examples{
 
-library(Highmed2)
+library(hdma2)
 
-# Run multivariate_EWAS
+# Run mEWAS
 
 res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 

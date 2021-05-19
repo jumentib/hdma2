@@ -65,11 +65,11 @@ test their significance.
 }
 \examples{
 
-library(Highmed2)
+library(hdma2)
 
 data(example)
 
-# Run multivariate EWAS
+# Run mEWAS
 
 res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 
