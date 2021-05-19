@@ -39,6 +39,8 @@ an object with the following attributes:
  - calibrated.pvalue, the calibrated pValue matrix for the exposure X and the outcome Y.
 
  - GIF : Genomic Inflation Factor for exposure and outcome
+
+ - lfmm : the result of the 2 regressions of lfmm, mod1 for the regression of X on M and mod2 for the regression of Y on M given X.
 }
 \description{
 This function uses lfmm (latent factor mixed models) to estimate

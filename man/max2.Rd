@@ -27,7 +27,7 @@ an object with the following attributes:
  - the eta0 of the set of pValues
 }
 \description{
-This function compute the squared maximum of two series of pValues from the multivariate_EWAS() function.
+This function compute the squared maximum of two series of pValues from the mEWAS() function.
 The objective of this function is to test all the markers and to determine which could be
 potential mediators in the exposure-outcome association.
 }

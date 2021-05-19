@@ -31,6 +31,8 @@
 ##'
 ##'  - GIF : Genomic Inflation Factor for exposure and outcome
 ##'
+##'  - lfmm : the result of the 2 regressions of lfmm, mod1 for the regression of X on M and mod2 for the regression of Y on M given X.
+##'
 ##' @details
 ##' The response variable matrix Y and the explanatory variable are centered.
 ##' Missing values must be imputed. The number of latent factors can be estimated
@@ -55,7 +57,6 @@ mEWAS <- function(X, Y, M, k, conf = NULL) {
   # First regression
   dat <- lfmm::lfmm_ridge(Y = M, X = cbind(X, conf), K = k)
   res[[1]] <- dat
-  U1 <- dat$U
   dat <- lfmm::lfmm_test(Y = M, X = cbind(X, conf), lfmm = dat)
 
   pv1 <- dat$pvalue[, 1]
@@ -70,7 +71,7 @@ mEWAS <- function(X, Y, M, k, conf = NULL) {
   dat <- lfmm::lfmm_ridge(Y = M, X = cbind(X, Y, conf), K = k)
   res[[2]] <- dat
   # ajout
-  U2 <- dat$U
+  U <- dat$U
   dat <- lfmm::lfmm_test(Y = M, X = cbind(X, Y, conf), lfmm = dat)
 
   pv2 <- dat$pvalue[, 2]
@@ -88,8 +89,7 @@ mEWAS <- function(X, Y, M, k, conf = NULL) {
               calibrated.score2 = cbind(sc1.cal, sc2.cal),
               calibrated.pvalue = cbind(pv1.cal, pv2.cal),
               gif = c(gif1, gif2),
-              U1 = U1,
-              U2 = U2,
+              U = U,
               lfmm = res))
 }
 
@@ -97,7 +97,7 @@ mEWAS <- function(X, Y, M, k, conf = NULL) {
 
 ##' Compute the squared maximum of two series of pValues
 ##'
-##' This function compute the squared maximum of two series of pValues from the multivariate_EWAS() function.
+##' This function compute the squared maximum of two series of pValues from the mEWAS() function.
 ##' The objective of this function is to test all the markers and to determine which could be
 ##' potential mediators in the exposure-outcome association.
 ##'
@@ -175,7 +175,7 @@ max2 <- function(pval1, pval2, diagnostic.plot = F, ...) {
 ##' Each column corresponds to a distinct explanatory variable (Outcome).
 ##' Explanatory variables must be encoded as numeric variables.
 ##' @param covar set of covariable, must be numeric.
-##' @param U set of latent factors from multivariate_EWAS() function
+##' @param U set of latent factors from mEWAS() function
 ##' @param FDR FDR threshold to pass markers in mediation analysis
 ##' @param sims number of Monte Carlo draws for nonparametric bootstrap or quasi-Bayesian approximation.
 ##' 10000 is recommended.
@@ -186,6 +186,10 @@ max2 <- function(pval1, pval2, diagnostic.plot = F, ...) {
 ##' Indirect effect (ACME - average causal mediation effect), ADE (average direct effect),
 ##' PM (proportion mediated) and TE (total effect). Composition of tables: estimated effect,
 ##' confidence interval and mediation pValue.
+##' We also return, We also return the results of the linear regressions.
+##' The xm table corresponds to the regressions of X on Mi and
+##' the my table to the regressions of Y on Mi knowing X.
+##' With Mi corresponding to the different CpGs tested.
 ##'
 ##' @details
 ##'
@@ -236,10 +240,15 @@ univariate_mediation <- function(qval, X, Y, M, covar = NULL, U = NULL, FDR = 0.
   M <- M[, qval <= FDR]
 
 
+  # from package mediation
   ACME <- matrix(ncol = 4, nrow = ncol(M))
   ADE <- matrix(ncol = 4, nrow = ncol(M))
   PM <- matrix(ncol = 4, nrow = ncol(M))
   TE <- matrix(ncol = 4, nrow = ncol(M))
+
+  # from linear models
+  xm <- matrix(ncol = 4, nrow = ncol(M))
+  my <- matrix(ncol = 4, nrow = ncol(M))
 
   for (i in 1:ncol(M)) {
 
@@ -248,6 +257,10 @@ univariate_mediation <- function(qval, X, Y, M, covar = NULL, U = NULL, FDR = 0.
 
     mod1 <- stats::lm(Mi ~ X + ., data = dat.x)
     mod2 <- stats::lm(Y ~ X + Mi + ., data = dat.y)
+
+    # for linear models
+    xm[i, ] <- summary(mod1)$coeff[2, ] # effect of X
+    my[i, ] <- summary(mod2)$coeff[3, ] # effect of M
 
     med <- mediation::mediate(mod1, mod2, sims = sims, treat = "X", mediator = "Mi", ...)
 
@@ -261,23 +274,32 @@ univariate_mediation <- function(qval, X, Y, M, covar = NULL, U = NULL, FDR = 0.
   ADE <- as.data.frame(ADE)
   PM <- as.data.frame(PM)
   TE <- as.data.frame(TE)
+  xm <- as.data.frame(xm)
+  my <- as.data.frame(my)
 
   colnames(ACME) <- c("est", "CI_2.5", "CI_97.5", "pval")
   colnames(ADE) <- c("est", "CI_2.5", "CI_97.5", "pval")
   colnames(PM) <- c("est", "CI_2.5", "CI_97.5", "pval")
   colnames(TE) <- c("est", "CI_2.5", "CI_97.5", "pval")
+  colnames(xm) <- c("Estimate", "Std.Error", "t.Value", "pValue")
+  colnames(my) <- c("Estimate", "Std.Error", "t.Value", "pValue")
 
   ACME$CpG <- colnames(M)
   ADE$CpG <- colnames(M)
   PM$CpG <- colnames(M)
   TE$CpG <- colnames(M)
+  xm$CpG <- colnames(M)
+  my$CpG <- colnames(M)
 
   return(list(ACME = ACME,
               ADE = ADE,
               PM = PM,
-              TE = TE))
+              TE = TE,
+              xm = xm,
+              my = my))
 
 }
+
 
 ##' Summary plot for ACME
 ##'

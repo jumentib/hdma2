@@ -33,7 +33,7 @@ Response variables must be encoded as numeric. No NAs allowed.}
 
 \item{covar}{set of covariable, must be numeric.}
 
-\item{U}{set of latent factors from multivariate_EWAS() function}
+\item{U}{set of latent factors from mEWAS() function}
 
 \item{FDR}{FDR threshold to pass markers in mediation analysis}
 
@@ -47,6 +47,10 @@ Tables of results of mediation analyzes for markers with a qValue below the FDR 
 Indirect effect (ACME - average causal mediation effect), ADE (average direct effect),
 PM (proportion mediated) and TE (total effect). Composition of tables: estimated effect,
 confidence interval and mediation pValue.
+We also return, We also return the results of the linear regressions.
+The xm table corresponds to the regressions of X on Mi and
+the my table to the regressions of Y on Mi knowing X.
+With Mi corresponding to the different CpGs tested.
 }
 \description{
 Estimate various quantities for causal mediation analysis for each
