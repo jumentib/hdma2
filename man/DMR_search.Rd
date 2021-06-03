@@ -37,7 +37,7 @@ library(hdma2)
 
 res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 
-# Keep latent factors for univariate mediation
+# Keep latent factors for mediation
 
 U <- res$U
 

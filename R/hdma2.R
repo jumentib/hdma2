@@ -209,7 +209,7 @@ max2 <- function(pval1, pval2, diagnostic.plot = F, ...) {
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
-##' # Keep latent factors for univariate mediation
+##' # Keep latent factors for mediation
 ##'
 ##' U <- res$U2
 ##'
@@ -217,9 +217,9 @@ max2 <- function(pval1, pval2, diagnostic.plot = F, ...) {
 ##'
 ##' res <- max2(pval1 = res$pValue[, 1], pval2 = res$pValue[, 2])
 ##'
-##' # Run Univariate mediation (only 3 simulations for estimate and test indirect effect)
+##' # Run mediation (only 3 simulations for estimate and test indirect effect)
 ##'
-##' res <- univariate_mediation(qval = res$qval,
+##' res <- wrap_mediation(qval = res$qval,
 ##'                             X = example$X,
 ##'                             Y = example$Y,
 ##'                             M = example$M,
@@ -231,7 +231,7 @@ max2 <- function(pval1, pval2, diagnostic.plot = F, ...) {
 ##'
 ##' plot_summary_med(res)
 ##'
-univariate_mediation <- function(qval, X, Y, M, covar = NULL, U = NULL, FDR = 0.1, sims = 3, ...) {
+wrap_mediation <- function(qval, X, Y, M, covar = NULL, U = NULL, FDR = 0.1, sims = 3, ...) {
 
   if (is.null(colnames(M))) {
     colnames(M) <- 1:ncol(M)
@@ -305,7 +305,7 @@ univariate_mediation <- function(qval, X, Y, M, covar = NULL, U = NULL, FDR = 0.
 ##'
 ##' This function draw a summary plot of ACME (average causal mediation effect)
 ##'
-##' @param ACME the table of ACME from the univariate_mediation() function
+##' @param ACME the table of ACME from the wrap_mediation() function
 ##' @return
 ##' Summary plot for ACME
 ##'
@@ -314,7 +314,7 @@ univariate_mediation <- function(qval, X, Y, M, covar = NULL, U = NULL, FDR = 0.
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' # see univariate_mediation example
+##' # see wrap_mediation example
 ##'
 ##' @import ggplot2
 ##'
@@ -339,11 +339,11 @@ plot_summary_ACME <- function(ACME) {
 
 
 
-##' Summary plot for univariate_mediation function
+##' Summary plot for wrap_mediation function
 ##'
 ##' This function draw a summary plot of the mediation analysis
 ##'
-##' @param res_univariate_mediation result object from univariate_mediation() function
+##' @param res_wrap_mediation result object from wrap_mediation() function
 ##' @return
 ##' Summary plot
 ##'
@@ -352,19 +352,19 @@ plot_summary_ACME <- function(ACME) {
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' # see univariate_mediation example
+##' # see wrap_mediation example
 ##'
 ##' @import ggplot2
 ##'
-plot_summary_med <- function(res_univariate_mediation) {
+plot_summary_med <- function(res_wrap_mediation) {
 
   # for check problem
 
 
-  tmp <- rbind(cbind(res_univariate_mediation$ACME, stat = "ACME"),
-               cbind(res_univariate_mediation$ADE, stat = "ADE"),
-               cbind(res_univariate_mediation$PM, stat = "PM"),
-               cbind(res_univariate_mediation$TE, stat = "TE"))
+  tmp <- rbind(cbind(res_wrap_mediation$ACME, stat = "ACME"),
+               cbind(res_wrap_mediation$ADE, stat = "ADE"),
+               cbind(res_wrap_mediation$PM, stat = "PM"),
+               cbind(res_wrap_mediation$TE, stat = "TE"))
 
   p <- ggplot(tmp, aes(est, stat, color = stat, shape = stat)) +
     geom_vline(xintercept = 0, linetype = "dashed") +
@@ -548,7 +548,7 @@ combp2 <- function (data, dist.cutoff = 1000, bin.size = 310, seed = 0.01, nCore
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
-##' # Keep latent factors for univariate mediation
+##' # Keep latent factors for mediation
 ##'
 ##' U <- res$U
 ##'
@@ -612,7 +612,7 @@ DMR_search <- function(chr, start, end, pval, cpg, ...) {
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
-##' # Keep latent factors for univariate mediation
+##' # Keep latent factors for mediation
 ##'
 ##' U <- res$U
 ##'
@@ -628,11 +628,11 @@ DMR_search <- function(chr, start, end, pval, cpg, ...) {
 ##'                   pval = res$pval,
 ##'                   cpg = example$annotation$cpg, nCores = 1)
 ##'
-##' # lauch DMR_built
+##' # lauch DMR_build
 ##'
-##' res <- DMR_built(res, methylation = example$M, nb_cpg = 2)
+##' res <- DMR_build(res, methylation = example$M, nb_cpg = 2)
 ##'
-DMR_built <- function(res, methylation, nb_cpg = 2) {
+DMR_build <- function(res, methylation, nb_cpg = 2) {
 
   data <- res$data
   res <- res$res
@@ -721,6 +721,10 @@ DMR_built <- function(res, methylation, nb_cpg = 2) {
 ##' Indirect effect (ACME - average causal mediation effect), ADE (average direct effect),
 ##' PM (proportion mediated) and TE (total effect). Composition of tables: estimated effect,
 ##' confidence interval and mediation pValue.
+##' We also return, We also return the results of the linear regressions.
+##' The xm table corresponds to the regressions of X on DMRi and
+##' the my table to the regressions of Y on DMRi knowing X.
+##' With DMRi corresponding to the different DMRs tested.
 ##'
 ##' @details
 ##'
@@ -738,7 +742,7 @@ DMR_built <- function(res, methylation, nb_cpg = 2) {
 ##'
 ##' res <- mEWAS(X = example$X, Y = example$Y, M = example$M, K = 5)
 ##'
-##' # Keep latent factors for univariate mediation
+##' # Keep latent factors for mediation
 ##'
 ##' U <- res$U
 ##'
@@ -754,24 +758,28 @@ DMR_built <- function(res, methylation, nb_cpg = 2) {
 ##'                   pval = res$pval,
 ##'                   cpg = example$annotation$cpg, nCores = 1)
 ##'
-##' # lauch DMR_built
+##' # lauch DMR_build
 ##'
-##' tmp <- DMR_built(res, methylation = example$M, nb_cpg = 2)
+##' tmp <- DMR_build(res, methylation = example$M, nb_cpg = 2)
 ##'
-##' # Univariate mediation for each DMR
+##' # mediation for each DMR
 ##'
-##' res <- univariate_mediation_DMR(X = example$X, Y = example$Y, DMR = tmp$DMR_acp, U = U, sims = 3)
+##' res <- wrap_mediation_DMR(X = example$X, Y = example$Y, DMR = tmp$DMR_acp, U = U, sims = 3)
 ##'
 ##' # Summary plot
 ##'
 ##' plot_summary_DMR(res, tmp)
 ##'
-univariate_mediation_DMR <- function(X, Y, DMR, covar = NULL, U = NULL, sims = 3) {
+wrap_mediation_DMR <- function(X, Y, DMR, covar = NULL, U = NULL, sims = 3) {
 
   ACME <- matrix(ncol = 4, nrow = ncol(DMR))
   ADE <- matrix(ncol = 4, nrow = ncol(DMR))
   PM <- matrix(ncol = 4, nrow = ncol(DMR))
   TE <- matrix(ncol = 4, nrow = ncol(DMR))
+
+  # from linear models
+  xm <- matrix(ncol = 4, nrow = ncol(DMR))
+  my <- matrix(ncol = 4, nrow = ncol(DMR))
 
   for (i in 1:ncol(DMR)) {
 
@@ -780,6 +788,10 @@ univariate_mediation_DMR <- function(X, Y, DMR, covar = NULL, U = NULL, sims = 3
 
     mod1 <- stats::lm(Mi ~ X + ., data = dat.x)
     mod2 <- stats::lm(Y ~ X + Mi + ., data = dat.y)
+
+    # for linear models
+    xm[i, ] <- summary(mod1)$coeff[2, ] # effect of X
+    my[i, ] <- summary(mod2)$coeff[3, ] # effect of M
 
     med <- mediation::mediate(mod1, mod2, sims = sims, treat = "X", mediator = "Mi")
 
@@ -793,33 +805,41 @@ univariate_mediation_DMR <- function(X, Y, DMR, covar = NULL, U = NULL, sims = 3
   ADE <- as.data.frame(ADE)
   PM <- as.data.frame(PM)
   TE <- as.data.frame(TE)
+  xm <- as.data.frame(xm)
+  my <- as.data.frame(my)
 
   colnames(ACME) <- c("est", "CI_2.5", "CI_97.5", "pval")
   colnames(ADE) <- c("est", "CI_2.5", "CI_97.5", "pval")
   colnames(PM) <- c("est", "CI_2.5", "CI_97.5", "pval")
   colnames(TE) <- c("est", "CI_2.5", "CI_97.5", "pval")
+  colnames(xm) <- c("Estimate", "Std.Error", "t.Value", "pValue")
+  colnames(my) <- c("Estimate", "Std.Error", "t.Value", "pValue")
 
   ACME$DMR <- colnames(DMR)
   ADE$DMR <- colnames(DMR)
   PM$DMR <- colnames(DMR)
   TE$DMR <- colnames(DMR)
+  xm$CpG <- colnames(DMR)
+  my$CpG <- colnames(DMR)
 
   return(list(ACME = ACME,
               ADE = ADE,
               PM = PM,
-              TE = TE))
+              TE = TE,
+              xm = xm,
+              my = my))
 
 }
 
 
 
 
-##' Summary plot for univariate_mediation_DMR function
+##' Summary plot for wrap_mediation_DMR function
 ##'
 ##' This function draw a summary plot of the mediation analysis
 ##'
-##' @param res_univariate_mediation_DMR result object from res_univariate_mediation_DMR() function
-##' @param res_DMR_built result object from res_DMR_built() function
+##' @param res_wrap_mediation_DMR result object from wrap_mediation_DMR() function
+##' @param res_DMR_build result object from DMR_build() function
 ##' @return
 ##' Summary plot
 ##'
@@ -828,14 +848,14 @@ univariate_mediation_DMR <- function(X, Y, DMR, covar = NULL, U = NULL, sims = 3
 ##' @author Basile Jumentier
 ##' @examples
 ##'
-##' # see univariate_mediation_DMR example
+##' # see wrap_mediation_DMR example
 ##'
 ##' @import ggplot2
-plot_summary_DMR <- function(res_univariate_mediation_DMR, res_DMR_built) {
+plot_summary_DMR <- function(res_wrap_mediation_DMR, res_DMR_build) {
 
 
-  tmp <- merge.data.frame(res_univariate_mediation_DMR$ACME,
-                          res_DMR_built$res, by.x = 5, by.y = 1)
+  tmp <- merge.data.frame(res_wrap_mediation_DMR$ACME,
+                          res_DMR_build$res, by.x = 5, by.y = 1)
 
   tmp$dmr <- paste0(tmp$chr, ":", tmp$start, "-", tmp$end)
 

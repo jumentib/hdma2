@@ -2,12 +2,12 @@
 % Please edit documentation in R/hdma2.R
 \name{plot_summary_med}
 \alias{plot_summary_med}
-\title{Summary plot for univariate_mediation function}
+\title{Summary plot for wrap_mediation function}
 \usage{
-plot_summary_med(res_univariate_mediation)
+plot_summary_med(res_wrap_mediation)
 }
 \arguments{
-\item{res_univariate_mediation}{result object from univariate_mediation() function}
+\item{res_wrap_mediation}{result object from wrap_mediation() function}
 }
 \value{
 Summary plot
@@ -17,7 +17,7 @@ This function draw a summary plot of the mediation analysis
 }
 \examples{
 
-# see univariate_mediation example
+# see wrap_mediation example
 
 }
 \author{

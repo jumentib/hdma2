@@ -2,14 +2,14 @@
 % Please edit documentation in R/hdma2.R
 \name{plot_summary_DMR}
 \alias{plot_summary_DMR}
-\title{Summary plot for univariate_mediation_DMR function}
+\title{Summary plot for wrap_mediation_DMR function}
 \usage{
-plot_summary_DMR(res_univariate_mediation_DMR, res_DMR_built)
+plot_summary_DMR(res_wrap_mediation_DMR, res_DMR_build)
 }
 \arguments{
-\item{res_univariate_mediation_DMR}{result object from res_univariate_mediation_DMR() function}
+\item{res_wrap_mediation_DMR}{result object from wrap_mediation_DMR() function}
 
-\item{res_DMR_built}{result object from res_DMR_built() function}
+\item{res_DMR_build}{result object from DMR_build() function}
 }
 \value{
 Summary plot
@@ -19,7 +19,7 @@ This function draw a summary plot of the mediation analysis
 }
 \examples{
 
-# see univariate_mediation_DMR example
+# see wrap_mediation_DMR example
 
 }
 \author{

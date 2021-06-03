@@ -7,7 +7,7 @@
 plot_summary_ACME(ACME)
 }
 \arguments{
-\item{ACME}{the table of ACME from the univariate_mediation() function}
+\item{ACME}{the table of ACME from the wrap_mediation() function}
 }
 \value{
 Summary plot for ACME
@@ -17,7 +17,7 @@ This function draw a summary plot of ACME (average causal mediation effect)
 }
 \examples{
 
-# see univariate_mediation example
+# see wrap_mediation example
 
 }
 \author{
