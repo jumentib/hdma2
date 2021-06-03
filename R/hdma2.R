@@ -361,10 +361,10 @@ plot_summary_med <- function(res_univariate_mediation) {
   # for check problem
 
 
-  tmp <- rbind(cbind(res$ACME, stat = "ACME"),
-               cbind(res$ADE, stat = "ADE"),
-               cbind(res$PM, stat = "PM"),
-               cbind(res$TE, stat = "TE"))
+  tmp <- rbind(cbind(res_univariate_mediation$ACME, stat = "ACME"),
+               cbind(res_univariate_mediation$ADE, stat = "ADE"),
+               cbind(res_univariate_mediation$PM, stat = "PM"),
+               cbind(res_univariate_mediation$TE, stat = "TE"))
 
   p <- ggplot(tmp, aes(est, stat, color = stat, shape = stat)) +
     geom_vline(xintercept = 0, linetype = "dashed") +
